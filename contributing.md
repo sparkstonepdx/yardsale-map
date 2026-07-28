@@ -5,7 +5,7 @@ Thanks for your interest in improving Yard Sale Map.
 ## License and copyright
 
 This project is released under the GNU General Public License, version 3 or later
-(see [LICENSE](./LICENSE)). Copyright is held by Sparkstone LLC.
+(see [license](./license)). Copyright is held by Sparkstone LLC.
 
 ## Contribution terms
 
