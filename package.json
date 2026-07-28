@@ -1,0 +1,89 @@
+{
+  "name": "yardsale-map",
+  "version": "0.0.0",
+  "description": "Web components (map + table) for the North Tabor neighborhood yard sale, backed by Google Sheets form responses",
+  "license": "MIT",
+  "author": "{{me}}",
+  "contributors": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/{{me}}/{{name_of_lib}}.git"
+  },
+  "homepage": "https://github.com/{{me}}/{{name_of_lib}}#readme",
+  "bugs": {
+    "url": "https://github.com/{{me}}/{{name_of_lib}}/issues"
+  },
+  "files": ["dist"],
+  "private": false,
+  "sideEffects": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "browser": {},
+  "exports": {
+    "development": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/dev.js"
+      }
+    },
+    "import": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "typesVersions": {},
+  "scripts": {
+    "dev": "vite serve dev",
+    "build": "tsup",
+    "build:cdn": "vite build -c vite.config.cdn.ts",
+    "test": "concurrently pnpm:test:*",
+    "test:client": "vitest",
+    "test:ssr": "pnpm run test:client --mode ssr",
+    "prepublishOnly": "pnpm build",
+    "format": "prettier --ignore-path .gitignore -w \"src/**/*.{js,ts,json,css,tsx,jsx}\" \"dev/**/*.{js,ts,json,css,tsx,jsx}\"",
+    "lint": "concurrently pnpm:lint:*",
+    "lint:code": "eslint --ignore-path .gitignore --max-warnings 0 src/**/*.{js,ts,tsx,jsx}",
+    "lint:types": "tsc --noEmit",
+    "update-deps": "pnpm up -Li"
+  },
+  "peerDependencies": {
+    "solid-js": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.21",
+    "@types/leaflet.markercluster": "^1.5.6",
+    "@types/node": "^20.12.12",
+    "@typescript-eslint/eslint-plugin": "^7.9.0",
+    "@typescript-eslint/parser": "^7.9.0",
+    "concurrently": "^8.2.2",
+    "esbuild": "^0.21.3",
+    "esbuild-plugin-solid": "^0.6.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-no-only-tests": "^3.1.0",
+    "jsdom": "^24.0.0",
+    "prettier": "3.0.0",
+    "solid-js": "^1.8.17",
+    "tsup": "^8.0.2",
+    "tsup-preset-solid": "^2.2.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11",
+    "vite-plugin-solid": "^2.10.2",
+    "vitest": "^1.6.0"
+  },
+  "keywords": ["solid"],
+  "packageManager": "pnpm@11.17.0",
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=9.0.0"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4",
+    "leaflet-fullscreen": "^1.0.2",
+    "leaflet.markercluster": "^1.5.3",
+    "solid-element": "^1.9.2",
+    "vite-plugin-css-injected-by-js": "^5.0.2"
+  }
+}
