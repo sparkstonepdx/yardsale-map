@@ -65,18 +65,20 @@ const store = createRoot(() => {
     return matched().filter(record => isDayVisible(record, config, active))
   })
 
-  return { config, setConfig, query, setQuery, deselectedDays, setDeselectedDays, availableDays, raw, records }
+  return {
+    config,
+    setConfig,
+    query,
+    setQuery,
+    deselectedDays,
+    setDeselectedDays,
+    availableDays,
+    raw,
+    records,
+  }
 })
 
-export const {
-  config,
-  query,
-  setQuery,
-  deselectedDays,
-  availableDays,
-  raw,
-  records,
-} = store
+export const { config, query, setQuery, deselectedDays, availableDays, raw, records } = store
 
 export const isConfigured = () =>
   Boolean((config.spreadsheetId || config.spreadsheetUrl) && config.apiKey)

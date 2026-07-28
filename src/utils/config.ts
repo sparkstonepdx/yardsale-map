@@ -72,7 +72,8 @@ export function mergeConfig(current: YardSaleConfig, input: YardSaleConfigInput)
     spreadsheetId: input.spreadsheetId ?? current.spreadsheetId,
     spreadsheetUrl: input.spreadsheetUrl ?? current.spreadsheetUrl,
     apiKey: input.apiKey ?? current.apiKey,
-    boundsUrls: input.boundsUrls !== undefined ? toStringArray(input.boundsUrls) : current.boundsUrls,
+    boundsUrls:
+      input.boundsUrls !== undefined ? toStringArray(input.boundsUrls) : current.boundsUrls,
     columns: {
       address: input.columns?.address ?? current.columns.address,
       sellingList:

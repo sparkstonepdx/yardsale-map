@@ -40,10 +40,10 @@ export default function YardSaleMap() {
     !isConfigured()
       ? ''
       : raw.loading
-        ? 'Loading data from Google Sheets...'
-        : raw.error
-          ? 'Error loading data from Google Sheets.'
-          : `Loaded ${records().length} locations.`
+      ? 'Loading data from Google Sheets...'
+      : raw.error
+      ? 'Error loading data from Google Sheets.'
+      : `Loaded ${records().length} locations.`
 
   let el!: HTMLDivElement
   let map: L.Map | undefined
@@ -61,7 +61,7 @@ export default function YardSaleMap() {
     }).addTo(map)
 
     clusterGroup = L.markerClusterGroup({
-      maxClusterRadius: zoom => (zoom > 16 ? 20 : (zoomRadii[zoom] ?? 80)),
+      maxClusterRadius: zoom => (zoom > 16 ? 20 : zoomRadii[zoom] ?? 80),
     })
     map.addLayer(clusterGroup)
   })
@@ -76,7 +76,7 @@ export default function YardSaleMap() {
 
   async function drawBounds(urls: string[], color: string) {
     const group = L.featureGroup()
-    if (!map) return;
+    if (!map) return
     for (const url of urls) {
       const geojson = await fetch(url).then(r => r.json())
       group.addLayer(
