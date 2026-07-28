@@ -46,8 +46,8 @@ export default function YardSaleMap() {
           : `Loaded ${records().length} locations.`
 
   let el!: HTMLDivElement
-  let map!: L.Map
-  let clusterGroup!: L.MarkerClusterGroup
+  let map: L.Map | undefined
+  let clusterGroup: L.MarkerClusterGroup | undefined
   let boundaryLayer: L.FeatureGroup | undefined
 
   onMount(() => {
@@ -69,13 +69,14 @@ export default function YardSaleMap() {
   // (Re)draw boundaries when the configured URLs or accent change.
   createEffect(() => {
     const urls = toStringArray(config.boundsUrls)
-    const color = config.accentColor?.trim() || DEFAULT_ACCENT
+    const color = config.accentColor.trim() || DEFAULT_ACCENT
     if (!map) return
     void drawBounds(urls, color)
   })
 
   async function drawBounds(urls: string[], color: string) {
     const group = L.featureGroup()
+    if (!map) return;
     for (const url of urls) {
       const geojson = await fetch(url).then(r => r.json())
       group.addLayer(
@@ -103,7 +104,7 @@ export default function YardSaleMap() {
   // Re-render markers whenever the visible records change.
   createEffect(() => {
     const list = records()
-    if (!clusterGroup) return
+    if (!clusterGroup || !map) return
 
     clusterGroup.clearLayers()
     const markers: L.Marker[] = []
