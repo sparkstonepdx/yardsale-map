@@ -251,7 +251,7 @@ things predictable. If you publish to npm instead, the address is
 ## License
 
 Yard Sale Map is free software, released under the **GNU General Public License,
-version 3 or later (GPLv3+)**. See [LICENSE](./LICENSE) for the full text. You're
+version 3 or later (GPLv3+)**. See [license](./license) for the full text. You're
 free to use, study, share, and modify it; distributed changes must stay under the
 GPL.
 
@@ -261,4 +261,4 @@ As the copyright holder, Sparkstone LLC also makes this software available under
 separate commercial terms for anyone who would rather not use it under the GPL.
 Contact Sparkstone for details.
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) if you'd like to contribute.
+See [contributing.md](./contributing.md.md) if you'd like to contribute.
