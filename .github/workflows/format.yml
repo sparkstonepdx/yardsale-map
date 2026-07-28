@@ -35,7 +35,7 @@ jobs:
         run: pnpm run build:cdn
 
       - name: commit Build
-        run: git add dist
+        run: git add dist -f
 
       - name: Add, Commit and Push
         uses: stefanzweifel/git-auto-commit-action@v7
