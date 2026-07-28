@@ -261,4 +261,4 @@ As the copyright holder, Sparkstone LLC also makes this software available under
 separate commercial terms for anyone who would rather not use it under the GPL.
 Contact Sparkstone for details.
 
-See [contributing.md](./contributing.md.md) if you'd like to contribute.
+See [contributing.md](./contributing.md) if you'd like to contribute.
