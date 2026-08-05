@@ -34,27 +34,29 @@ const App: Component = () => {
   createEffect(() => localStorage.setItem('ys.apiKey', apiKey()))
   createEffect(() => localStorage.setItem('ys.sheetURL', sheetURL()))
 
+  const config = () => ({
+    spreadsheetId: sheetId(),
+    spreadsheetUrl: sheetURL(),
+    apiKey: apiKey(),
+    accentColor: 'green',
+    boundsUrls: BOUNDS_URLS,
+    scheduleMap: {
+      'Both days, Sept 19 and Sept 20 (9:00 a.m. to 3:00 p.m.)': ['sat', 'sun'],
+      'Neither (if you need to cancel)': [],
+    },
+    eventDates: { sat: '2026-09-19', sun: '2026-09-20' },
+    timezone: 'America/Los_Angeles',
+    columns: {
+      day: 'What day(s) do you plan to participate in the yard sale?',
+      address: ADDRESS_COLUMN,
+      sellingList: SELLING_COLUMNS,
+      cancelled: CANCELLED_COLUMN,
+    },
+  })
+
   // Push config into the store whenever the inputs change.
   createEffect(() => {
-    configureYardSale({
-      spreadsheetId: sheetId(),
-      spreadsheetUrl: sheetURL(),
-      apiKey: apiKey(),
-      accentColor: 'rebeccapurple',
-      boundsUrls: BOUNDS_URLS,
-      scheduleMap: {
-        'Both days, Sept 19 and Sept 20 (9:00 a.m. to 3:00 p.m.)': ['sat', 'sun'],
-        'Neither (if you need to cancel)': [],
-      },
-      eventDates: { sat: '2026-09-19', sun: '2026-09-20' },
-      timezone: 'America/Los_Angeles',
-      columns: {
-        day: 'What day(s) do you plan to participate in the yard sale?',
-        address: ADDRESS_COLUMN,
-        sellingList: SELLING_COLUMNS,
-        cancelled: CANCELLED_COLUMN,
-      },
-    })
+    configureYardSale(config())
   })
 
   return (
@@ -84,6 +86,11 @@ const App: Component = () => {
       <yard-sale-day-filter></yard-sale-day-filter>
       <yard-sale-map></yard-sale-map>
       <yard-sale-table></yard-sale-table>
+      <p>Full</p>
+      <yard-sale-full
+        config={config()}
+        elements={["search","map"]}
+      ></yard-sale-full>
     </main>
   )
 }

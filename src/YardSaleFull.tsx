@@ -16,12 +16,14 @@ const elements = {
   filter: YardSaleDayFilter,
 } as const
 
-interface Props {
+export type YardSaleElementName = keyof typeof elements
+
+export interface YardSaleFullProps {
   config: Json<YardSaleConfigInput> | YardSaleConfigInput
-  elements: (keyof typeof elements)[]
+  elements: YardSaleElementName[]
 }
 
-export default function YardSaleFull(props: Props) {
+export default function YardSaleFull(props: YardSaleFullProps) {
   noShadowDOM()
 
   onMount(() => {
@@ -30,7 +32,9 @@ export default function YardSaleFull(props: Props) {
 
   return (
     <>
-      <For each={props.elements}>{element => <Dynamic component={elements[element]} />}</For>
+      <For each={fromJson(props.elements)}>
+        {element => <Dynamic component={elements[element]} />}
+      </For>
     </>
   )
 }
