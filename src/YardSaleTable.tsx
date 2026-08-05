@@ -18,31 +18,33 @@ export default function YardSaleTable() {
   const showDayColumn = () => rows().some(row => row.days.length > 0)
 
   return (
-    <div class="ys-table">
-      <table>
-        <thead>
-          <tr>
-            <th>Address</th>
-            <th>Selling</th>
-            <Show when={showDayColumn()}>
-              <th>Day(s)</th>
-            </Show>
-          </tr>
-        </thead>
-        <tbody>
-          <For each={rows()}>
-            {row => (
-              <tr>
-                <td>{row.address}</td>
-                <td>{row.selling}</td>
-                <Show when={showDayColumn()}>
-                  <td>{row.days}</td>
-                </Show>
-              </tr>
-            )}
-          </For>
-        </tbody>
-      </table>
-    </div>
+    <Show when={rows()?.length > 0}>
+      <div class="ys-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Address</th>
+              <th>Selling</th>
+              <Show when={showDayColumn()}>
+                <th>Day(s)</th>
+              </Show>
+            </tr>
+          </thead>
+          <tbody>
+            <For each={rows()}>
+              {row => (
+                <tr>
+                  <td>{row.address}</td>
+                  <td>{row.selling}</td>
+                  <Show when={showDayColumn()}>
+                    <td>{row.days}</td>
+                  </Show>
+                </tr>
+              )}
+            </For>
+          </tbody>
+        </table>
+      </div>
+    </Show>
   )
 }
