@@ -11,10 +11,15 @@ You get four pieces you can place anywhere on your page:
 - A **search box** that filters the map and the list at the same time.
 - **Day checkboxes** that appear only for weekend (multi-day) sales.
 
+There's also an **all-in-one** version that bundles the pieces into a single tag.
+Use it on website builders like Wix, where the four separate pieces won't fit.
+See [Wix and other website builders](#wix-and-other-website-builders).
+
 Most of the setup is point-and-click and takes about 20 to 30 minutes. No coding
 is needed until the very last step, where you paste a short snippet into your
 website. If you use WordPress, that's a "Custom HTML" block, and you can hand
-that part to whoever manages your site if you'd rather not do it yourself.
+that part to whoever manages your site if you'd rather not do it yourself. Wix
+works differently, and has [its own section](#wix-and-other-website-builders).
 
 ---
 
@@ -57,12 +62,12 @@ figures that out automatically for every new submission. You install it once.
 
 1. In your new spreadsheet, click **Extensions → Apps Script**. A code editor opens.
 2. Delete anything that's in there, then paste in the helper from
-   [`sheet/sheet-app-script.ts`](./sheet/sheet-app-script.ts).
+   [`sheet/sheet-app-script.js`](./sheet/sheet-app-script.js).
 3. Near the top you'll see this line. Change the text in quotes to match your
    form's address question, word for word:
 
    ```js
-   const ADDRESS_COLUMN_HEADER = "Yard Sale Address";
+   const ADDRESS_COLUMN_HEADER = 'Yard Sale Address'
    ```
 
 4. Set it to run automatically on each submission: click the **clock icon
@@ -71,7 +76,7 @@ figures that out automatically for every new submission. You install it once.
    for permission the first time, which is expected; approve it.
 
 That's it. From now on, each new submission gets its map location filled in
-automatically. (Submissions made *before* you installed this won't have a
+automatically. (Submissions made _before_ you installed this won't have a
 location yet. To fix an old one, just submit it again.)
 
 ### Step 4: Let your website read the sheet
@@ -93,8 +98,8 @@ A "key" is a short code your website uses to ask Google for the sheet's contents
    you and keep it handy for the last step.
 
 Now lock the key down. The key will be visible in your website's code, which is
-normal, but you want to make sure it only works *on your site* and only *for
-reading spreadsheets*, so nobody can copy it and use it for anything else. Think
+normal, but you want to make sure it only works _on your site_ and only _for
+reading spreadsheets_, so nobody can copy it and use it for anything else. Think
 of it like a key that only opens one door, and only from your porch.
 
 Click your new key to edit it, and set these two things:
@@ -132,18 +137,18 @@ and the second one hands it your details.
 <!-- Your details -->
 <script>
   configureYardSale({
-    spreadsheetUrl: "PASTE_YOUR_GOOGLE_SHEET_LINK_HERE",
-    apiKey: "PASTE_YOUR_KEY_HERE",
+    spreadsheetUrl: 'PASTE_YOUR_GOOGLE_SHEET_LINK_HERE',
+    apiKey: 'PASTE_YOUR_KEY_HERE',
     columns: {
-      address: "Yard Sale Address",
+      address: 'Yard Sale Address',
       sellingList: [
-        "What can people expect to find (Check all that apply)",
-        "Anything else you would like to add to your sale?",
+        'What can people expect to find (Check all that apply)',
+        'Anything else you would like to add to your sale?',
       ],
-      cancelled: "Check here if you need to cancel",
+      cancelled: 'Check here if you need to cancel',
     },
-    accentColor: "#009879",
-  });
+    accentColor: '#009879',
+  })
 </script>
 
 <!-- The map, list, and search box. Put these wherever you want them. -->
@@ -161,24 +166,103 @@ A few notes:
 
 ---
 
+## Wix and other website builders
+
+Wix's "Embed HTML" block puts whatever you paste into a fixed-size frame. The
+frame keeps the height you drew in the editor, so the list gets a scrollbar of
+its own as neighbors sign up, and the map gets cut off.
+
+For those sites, use Wix's **Custom Element** instead, which puts the map on the
+page itself rather than in a frame, so it grows as the list does. It takes one
+tag, so this is where the all-in-one `<yard-sale-full>` version comes in.
+
+1. In the Wix editor, choose **Add Elements → Embed & Social → Custom Element**.
+2. For the source, choose **Server URL** and paste the same address from the
+   `<script src>` in Step 6:
+   `https://cdn.jsdelivr.net/gh/sparkstonepdx/yardsale-map@v1.0.0/dist/yardsale.min.js`
+3. For **Tag Name**, enter `yard-sale-full`, spelled exactly that way.
+4. Open **Set Attributes** and add the two below.
+5. In the Inspector, set the element and the section holding it to fit their
+   contents, so the page grows with the list.
+
+**`config`** holds the same details as Step 6, written as JSON. That means double
+quotes around every name and value, and no trailing commas:
+
+```json
+{
+  "spreadsheetUrl": "PASTE_YOUR_GOOGLE_SHEET_LINK_HERE",
+  "apiKey": "PASTE_YOUR_KEY_HERE",
+  "columns": {
+    "address": "Yard Sale Address",
+    "sellingList": ["What can people expect to find (Check all that apply)"],
+    "cancelled": "Check here if you need to cancel"
+  },
+  "accentColor": "#009879"
+}
+```
+
+**`elements`** lists which pieces to show, in the order you want them:
+
+```json
+["search", "map", "table"]
+```
+
+The four names you can use are `search`, `filter`, `map`, and `table`. Leave out
+any you don't want. `filter` is the day checkboxes, so skip it for a one-day sale.
+
+Two things worth knowing:
+
+- **Judge the height on your published site, not in the editor.** Wix previews
+  custom elements inside a frame, so the preview shows the old scrolling behavior
+  even when the live page is fine.
+- **The map keeps a fixed height on purpose.** Maps need one; a map that grows
+  forever isn't useful. The list below it is the part that grows.
+
+You can also use `<yard-sale-full>` on an ordinary site if you'd rather paste one
+tag than four. Written as plain HTML it looks like this:
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/sparkstonepdx/yardsale-map@v1.0.0/dist/yardsale.min.js"></script>
+
+<yard-sale-full
+  config='{"spreadsheetUrl":"PASTE_YOUR_GOOGLE_SHEET_LINK_HERE","apiKey":"PASTE_YOUR_KEY_HERE","columns":{"address":"Yard Sale Address"}}'
+  elements='["search","map","table"]'
+></yard-sale-full>
+```
+
+Note the single quotes around each attribute, which leave the double quotes free
+for the JSON inside.
+
+---
+
 ## Settings you can change
 
 Everything below goes inside the `configureYardSale({ ... })` block from Step 6.
 Only `spreadsheetUrl`, `apiKey`, and `columns.address` are truly required.
 
-| Setting | Example | What it does |
-| --- | --- | --- |
-| `spreadsheetUrl` | `"https://docs.google.com/…"` | The link to your Google Sheet. |
-| `apiKey` | `"AIza…"` | The key from Step 4b. |
-| `columns.address` | `"Yard Sale Address"` | Your form's address question. |
-| `columns.sellingList` | `["What can people…"]` | One or more questions listing what's for sale. |
-| `columns.cancelled` | `"Check here if you need to cancel"` | A question that hides a sale when answered. |
-| `columns.day` | `"What day(s)…"` | The which-day question (weekend sales only). |
-| `scheduleMap` | see below | Turns each day answer into a day (weekend sales only). |
-| `eventDates` | `{ sat: "2026-09-19" }` | The actual date of each day (weekend sales only). |
-| `timezone` | `"America/Los_Angeles"` | Your local time zone, so "Today"/"Tomorrow" are correct. |
-| `boundsUrls` | `["https://…/area.geojson"]` | Neighborhood outline file(s) from Step 5. |
-| `accentColor` | `"#7c3aed"` | The main color, used on the header, buttons, and outline. |
+| Setting               | Example                              | What it does                                              |
+| --------------------- | ------------------------------------ | --------------------------------------------------------- |
+| `spreadsheetUrl`      | `"https://docs.google.com/…"`        | The link to your Google Sheet.                            |
+| `apiKey`              | `"AIza…"`                            | The key from Step 4b.                                     |
+| `columns.address`     | `"Yard Sale Address"`                | Your form's address question.                             |
+| `columns.sellingList` | `["What can people…"]`               | One or more questions listing what's for sale.            |
+| `columns.cancelled`   | `"Check here if you need to cancel"` | A question that hides a sale when answered.               |
+| `columns.day`         | `"What day(s)…"`                     | The which-day question (weekend sales only).              |
+| `scheduleMap`         | see below                            | Turns each day answer into a day (weekend sales only).    |
+| `eventDates`          | `{ sat: "2026-09-19" }`              | The actual date of each day (weekend sales only).         |
+| `timezone`            | `"America/Los_Angeles"`              | Your local time zone, so "Today"/"Tomorrow" are correct.  |
+| `boundsUrls`          | `["https://…/area.geojson"]`         | Neighborhood outline file(s) from Step 5.                 |
+| `accentColor`         | `"#7c3aed"`                          | The main color, used on the header, buttons, and outline. |
+
+### The all-in-one tag
+
+`<yard-sale-full>` takes the same settings as attributes instead, which is what
+website builders like Wix can fill in for you.
+
+| Attribute  | Example                    | What it does                                      |
+| ---------- | -------------------------- | ------------------------------------------------- |
+| `config`   | `{"apiKey":"AIza…"}`       | Everything from the table above, written as JSON. |
+| `elements` | `["search","map","table"]` | Which pieces to show, in order.                   |
 
 ---
 
@@ -198,22 +282,22 @@ For a weekend, you connect three settings so the map understands the schedule:
 
 ```js
 configureYardSale({
-  spreadsheetUrl: "PASTE_YOUR_GOOGLE_SHEET_LINK_HERE",
-  apiKey: "PASTE_YOUR_KEY_HERE",
+  spreadsheetUrl: 'PASTE_YOUR_GOOGLE_SHEET_LINK_HERE',
+  apiKey: 'PASTE_YOUR_KEY_HERE',
   columns: {
-    address: "Yard Sale Address",
-    sellingList: ["What can people expect to find (Check all that apply)"],
-    day: "What day(s) do you plan to participate in the yard sale?",
+    address: 'Yard Sale Address',
+    sellingList: ['What can people expect to find (Check all that apply)'],
+    day: 'What day(s) do you plan to participate in the yard sale?',
   },
   scheduleMap: {
-    "Saturday, September 19, 2026 (9:00 a.m. to 3:00 p.m.)": ["sat"],
-    "Sunday, September 20, 2026 (9:00 a.m. to 3:00 p.m.)": ["sun"],
-    "Both days, Sept 19 and Sept 20 (9:00 a.m. to 3:00 p.m.)": ["sat", "sun"],
-    "Neither (if you need to cancel)": [],
+    'Saturday, September 19, 2026 (9:00 a.m. to 3:00 p.m.)': ['sat'],
+    'Sunday, September 20, 2026 (9:00 a.m. to 3:00 p.m.)': ['sun'],
+    'Both days, Sept 19 and Sept 20 (9:00 a.m. to 3:00 p.m.)': ['sat', 'sun'],
+    'Neither (if you need to cancel)': [],
   },
-  eventDates: { sat: "2026-09-19", sun: "2026-09-20" },
-  timezone: "America/Los_Angeles",
-});
+  eventDates: { sat: '2026-09-19', sun: '2026-09-20' },
+  timezone: 'America/Los_Angeles',
+})
 ```
 
 With this set up, day checkboxes appear (all checked to start). Unchecking a day
@@ -235,6 +319,18 @@ sale's day(s).
 - **Nothing shows up, and a tech-savvy friend sees "configureYardSale is not
   defined" in the browser console.** The two script blocks are in the wrong
   order. The one that loads the program must come first.
+- **On Wix, the box stays empty.** Check that the Tag Name is `yard-sale-full`,
+  spelled exactly that way, and that the Server URL ends in `yardsale.min.js`.
+- **On Wix, the box shows a map but no sales.** The `config` attribute isn't
+  valid JSON. Every name and value needs double quotes, and there can be no
+  trailing comma before a closing brace or bracket. Pasting it into a JSON
+  checker will point at the character that's wrong.
+- **Only some pieces appear.** Check the spelling in `elements`. The four names
+  are `search`, `filter`, `map`, and `table`, all lowercase.
+- **The list still scrolls inside a box on Wix.** That's the Embed HTML block,
+  not the Custom Element. See [Wix and other website
+  builders](#wix-and-other-website-builders). If you've already switched, check
+  the published page rather than the editor preview.
 
 ---
 
@@ -256,9 +352,5 @@ free to use, study, share, and modify it; distributed changes must stay under th
 GPL.
 
 Copyright (C) 2026 Sparkstone LLC.
-
-As the copyright holder, Sparkstone LLC also makes this software available under
-separate commercial terms for anyone who would rather not use it under the GPL.
-Contact Sparkstone for details.
 
 See [contributing.md](./contributing.md) if you'd like to contribute.

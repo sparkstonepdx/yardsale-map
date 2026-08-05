@@ -63,7 +63,8 @@ const App: Component = () => {
     <main style={{ 'max-width': '960px', margin: '2rem auto', padding: '0 1rem' }}>
       <h1>North Tabor Yard Sale</h1>
 
-      <div class="config">
+      <fieldset class="config">
+        <legend>Config</legend>
         <label>
           <span>Spreadsheet ID</span>
           <input value={sheetId()} onInput={e => setSheetId(e.currentTarget.value)} />
@@ -80,17 +81,42 @@ const App: Component = () => {
             onInput={e => setApiKey(e.currentTarget.value)}
           />
         </label>
-      </div>
+      </fieldset>
 
-      <yard-sale-search></yard-sale-search>
-      <yard-sale-day-filter></yard-sale-day-filter>
-      <yard-sale-map></yard-sale-map>
-      <yard-sale-table></yard-sale-table>
-      <p>Full</p>
-      <yard-sale-full
-        config={config()}
-        elements={["search","map"]}
-      ></yard-sale-full>
+      <p>You can use individual web components and place them wherever you'd like on the screen.</p>
+      <p>
+        When using something like wix, if you embed custom html, it puts your content in an iframe
+        that doesn't automatically expand as the content changes (like the table growing as more
+        records are added)
+      </p>
+      <p>
+        For that instance, you can use the custom web element, and use the Full element below, that
+        should allow it to grow
+      </p>
+
+      <fieldset>
+        <legend>Individual Pieces</legend>
+        <fieldset>
+          <legend>search</legend>
+          <yard-sale-search></yard-sale-search>
+        </fieldset>
+        <fieldset>
+          <legend>Day Filter</legend>
+          <yard-sale-day-filter></yard-sale-day-filter>
+        </fieldset>
+        <fieldset>
+          <legend>Map</legend>
+          <yard-sale-map></yard-sale-map>
+        </fieldset>
+        <fieldset>
+          <legend>Table</legend>
+          <yard-sale-table></yard-sale-table>
+        </fieldset>
+      </fieldset>
+      <fieldset>
+        <legend>Composable wrapper</legend>
+        <yard-sale-full config={config()} elements={['search', 'map']}></yard-sale-full>
+      </fieldset>
     </main>
   )
 }
