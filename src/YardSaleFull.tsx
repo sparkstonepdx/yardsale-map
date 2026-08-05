@@ -16,9 +16,8 @@ const elements = {
   filter: YardSaleDayFilter,
 } as const
 
-
 interface Props {
-  config: Json<YardSaleConfigInput> | YardSaleConfigInput;
+  config: Json<YardSaleConfigInput> | YardSaleConfigInput
   elements: (keyof typeof elements)[]
 }
 
