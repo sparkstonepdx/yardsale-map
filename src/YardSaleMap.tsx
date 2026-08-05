@@ -99,6 +99,9 @@ export default function YardSaleMap() {
     if (boundaryLayer) map.removeLayer(boundaryLayer)
     boundaryLayer = group
     group.addTo(map)
+    if (!records()?.length) {
+      map.fitBounds(group.getBounds().pad(0.1))
+    }
   }
 
   // Re-render markers whenever the visible records change.
