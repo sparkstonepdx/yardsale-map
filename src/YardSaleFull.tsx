@@ -21,6 +21,8 @@ export type YardSaleElementName = keyof typeof elements
 export interface YardSaleFullProps {
   config: Json<YardSaleConfigInput> | YardSaleConfigInput
   elements: YardSaleElementName[]
+  style?: string;
+  'data-style'?: string;
 }
 
 export default function YardSaleFull(props: YardSaleFullProps) {
@@ -31,10 +33,10 @@ export default function YardSaleFull(props: YardSaleFullProps) {
   })
 
   return (
-    <>
+    <div style={props.style || props['data-style']}>
       <For each={fromJson(props.elements)}>
         {element => <Dynamic component={elements[element]} />}
       </For>
-    </>
+    </div>
   )
 }

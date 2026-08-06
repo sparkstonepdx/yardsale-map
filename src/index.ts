@@ -18,6 +18,7 @@ customElement(
   {
     config: {} as YardSaleConfigInput,
     elements: [] as YardSaleElementName[],
+    'data-style': undefined
   },
   YardSaleFull,
 )
