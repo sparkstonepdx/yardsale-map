@@ -66,6 +66,12 @@ yard-sale-day-filter {
   cursor: pointer;
 }
 
+.ys-pin {
+  color: oklch(from var(--ys-accent) l c h);
+  background: none;
+  border: 0;
+}
+
 .ys-table table {
   border-collapse: collapse;
   font-size: 0.9em;

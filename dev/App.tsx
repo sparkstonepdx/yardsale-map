@@ -38,7 +38,7 @@ const App: Component = () => {
     spreadsheetId: sheetId(),
     spreadsheetUrl: sheetURL(),
     apiKey: apiKey(),
-    accentColor: 'green',
+    accentColor: 'orange',
     boundsUrls: BOUNDS_URLS,
     scheduleMap: {
       'Both days, Sept 19 and Sept 20 (9:00 a.m. to 3:00 p.m.)': ['sat', 'sun'],
