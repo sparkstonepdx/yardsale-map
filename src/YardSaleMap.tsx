@@ -9,11 +9,23 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import 'leaflet-fullscreen/dist/leaflet.fullscreen.css'
 
 import { config, records, raw, isConfigured } from './store'
-import { getSellingItems, toStringArray } from './utils/config'
+import { getAddress, getSellingItems, toStringArray } from './utils/config'
 import { type YardSaleRecord } from './utils/sheets'
 import { capitalize } from './utils/string'
 
 const DEFAULT_ACCENT = 'oklch(0.7053 0.117868 171.5664)'
+
+const pin = L.divIcon({
+  className: 'ys-pin',
+  html: `<svg viewBox="0 0 24 32" width="24" height="32" aria-hidden="true">
+    <path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 20 12 20s12-11 12-20c0-6.6-5.4-12-12-12z"
+          fill="currentColor" stroke="#fff" stroke-width="1.5"/>
+    <circle cx="12" cy="12" r="4.5" fill="#fff"/>
+  </svg>`,
+  iconSize: [24, 32],
+  iconAnchor: [12, 32],
+  popupAnchor: [0, -30],
+})
 
 const zoomRadii: Record<number, number> = {
   12: 50,
@@ -40,10 +52,10 @@ export default function YardSaleMap() {
     !isConfigured()
       ? ''
       : raw.loading
-      ? 'Loading data from Google Sheets...'
-      : raw.error
-      ? 'Error loading data from Google Sheets.'
-      : `Loaded ${records().length} locations.`
+        ? 'Loading data from Google Sheets...'
+        : raw.error
+          ? 'Error loading data from Google Sheets.'
+          : `Loaded ${records().length} locations.`
 
   let el!: HTMLDivElement
   let map: L.Map | undefined
@@ -61,7 +73,7 @@ export default function YardSaleMap() {
     }).addTo(map)
 
     clusterGroup = L.markerClusterGroup({
-      maxClusterRadius: zoom => (zoom > 16 ? 20 : zoomRadii[zoom] ?? 80),
+      maxClusterRadius: zoom => (zoom > 16 ? 20 : (zoomRadii[zoom] ?? 80)),
     })
     map.addLayer(clusterGroup)
   })
@@ -117,7 +129,9 @@ export default function YardSaleMap() {
       const lng = parseFloat(record.Longitude ?? '')
       if (Number.isNaN(lat) || Number.isNaN(lng)) continue
 
-      const marker = L.marker([lat, lng]).bindPopup(popupHtml(record))
+      const marker = L.marker([lat, lng], { icon: pin, alt: getAddress(record, config) }).bindPopup(
+        popupHtml(record),
+      )
       clusterGroup.addLayer(marker)
       markers.push(marker)
     }
