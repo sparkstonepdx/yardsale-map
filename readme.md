@@ -74,10 +74,16 @@ figures that out automatically for every new submission. You install it once.
    (Triggers)** on the left, then **Add Trigger**. Choose the function
    `onFormSubmit`, set the event to **On form submit**, and save. Google will ask
    for permission the first time, which is expected; approve it.
+5. Add a second trigger the same way, so that fixing a typo in an address also
+   moves the pin. Click **Add Trigger** again, choose the function
+   `onAddressEdit`, and set the event to **On edit**.
 
 That's it. From now on, each new submission gets its map location filled in
-automatically. (Submissions made _before_ you installed this won't have a
-location yet. To fix an old one, just submit it again.)
+automatically, and editing an address later moves its pin to match.
+
+Submissions made _before_ you installed this won't have a location yet. To fill
+them all in at once, open **Extensions → Apps Script**, pick `geocodeAllRows`
+from the function dropdown at the top, and click **Run**.
 
 ### Step 4: Let your website read the sheet
 
