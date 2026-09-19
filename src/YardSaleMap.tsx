@@ -9,7 +9,13 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import 'leaflet-fullscreen/dist/leaflet.fullscreen.css'
 
 import { config, records, raw, isConfigured } from './store'
-import { getAddress, getSellingItems, toStringArray } from './utils/config'
+import {
+  DEFAULT_POPUP_TEMPLATE,
+  getAddress,
+  popupVars,
+  toStringArray,
+} from './utils/config'
+import { renderTemplate } from './utils/template'
 import { type YardSaleRecord } from './utils/sheets'
 import { capitalize } from './utils/string'
 
@@ -37,12 +43,8 @@ const zoomRadii: Record<number, number> = {
 }
 
 function popupHtml(record: YardSaleRecord): string {
-  const items = getSellingItems(record, config)
-  return `
-    <div>
-      <h2>Selling</h2>
-      <ul>${items.map(item => `<li>${item}</li>`).join('')}</ul>
-    </div>`
+  const template = config.popupTemplate.trim() || DEFAULT_POPUP_TEMPLATE
+  return renderTemplate(template, popupVars(record, config))
 }
 
 export default function YardSaleMap() {

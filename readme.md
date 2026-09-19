@@ -253,6 +253,32 @@ Only `spreadsheetUrl`, `apiKey`, and `columns.address` are truly required.
 | `timezone`            | `"America/Los_Angeles"`              | Your local time zone, so "Today"/"Tomorrow" are correct.  |
 | `boundsUrls`          | `["https://…/area.geojson"]`         | Neighborhood outline file(s) from Step 5.                 |
 | `accentColor`         | `"#7c3aed"`                          | The main color, used on the header, buttons, and outline. |
+| `popupTemplate`       | see below                            | What shows when someone taps a pin on the map.            |
+
+### What a map pin shows
+
+Tapping a pin shows the address, the day(s), and what's for sale. To change
+that, set `popupTemplate` to your own snippet of HTML. Anything in double curly
+braces gets filled in:
+
+```js
+popupTemplate: `
+  <h2>{{address}}</h2>
+  {{#days}}<p>Open {{days}}</p>{{/days}}
+  <p>{{selling}}</p>
+  <p>{{Your contact question}}</p>
+`
+```
+
+You can use:
+
+- `{{address}}`, `{{selling}}` (a comma-separated list), and `{{days}}`
+- `{{{sellingList}}}` for the items as `<li>` rows, to go inside your own `<ul>`
+- any question from your form, written exactly as it appears in the sheet
+  header, like `{{What time do you open?}}`
+
+Wrapping a part in `{{#name}}` and `{{/name}}` hides it when that answer is
+blank, so a sale that skipped a question doesn't show an empty heading.
 
 ### The all-in-one tag
 

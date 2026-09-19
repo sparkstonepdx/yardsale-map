@@ -7,6 +7,7 @@
 // Display labels ("Today"/"Tomorrow") are computed from a date, never stored.
 
 import type { YardSaleRecord } from './sheets'
+import { escapeHtml } from './template'
 
 export interface YardSaleColumns {
   address: string
@@ -25,6 +26,7 @@ export interface YardSaleConfig {
   eventDates: Record<string, string>
   timezone: string
   accentColor: string
+  popupTemplate: string
 }
 
 // Everything optional: callers pass whatever they have, whenever they have it.
@@ -43,7 +45,15 @@ export interface YardSaleConfigInput {
   eventDates?: Record<string, string>
   timezone?: string
   accentColor?: string
+  popupTemplate?: string
 }
+
+// What a map pin shows when there is no popupTemplate set.
+export const DEFAULT_POPUP_TEMPLATE = `<div class="ys-popup">
+  {{#address}}<h2>{{address}}</h2>{{/address}}
+  {{#days}}<p class="ys-popup-days">{{days}}</p>{{/days}}
+  {{#selling}}<h3>Selling</h3><ul>{{{sellingList}}}</ul>{{/selling}}
+</div>`
 
 export function emptyConfig(): YardSaleConfig {
   return {
@@ -56,6 +66,7 @@ export function emptyConfig(): YardSaleConfig {
     eventDates: {},
     timezone: '',
     accentColor: '',
+    popupTemplate: '',
   }
 }
 
@@ -87,6 +98,7 @@ export function mergeConfig(current: YardSaleConfig, input: YardSaleConfigInput)
     eventDates: input.eventDates ?? current.eventDates,
     timezone: input.timezone ?? current.timezone,
     accentColor: input.accentColor ?? current.accentColor,
+    popupTemplate: input.popupTemplate ?? current.popupTemplate,
   }
 }
 
@@ -166,4 +178,24 @@ export function matches(record: YardSaleRecord, query: string, config: YardSaleC
     .join(' ')
     .toLowerCase()
   return haystack.includes(q)
+}
+
+// Values a popup template can reference: every sheet column by its header, plus
+// the derived ones below. sellingList is pre-escaped markup, so it needs {{{ }}}.
+export function popupVars(
+  record: YardSaleRecord,
+  config: YardSaleConfig,
+  now = new Date(),
+): Record<string, string> {
+  const items = getSellingItems(record, config)
+  const vars: Record<string, string> = {}
+
+  for (const [key, value] of Object.entries(record)) vars[key] = value ?? ''
+
+  vars.address = getAddress(record, config)
+  vars.selling = items.join(', ')
+  vars.sellingList = items.map(item => `<li>${escapeHtml(item)}</li>`).join('')
+  vars.days = getDayLabels(record, config, now).join(' & ')
+
+  return vars
 }

@@ -4,6 +4,7 @@ yard-sale-table,
 yard-sale-search,
 yard-sale-day-filter {
   display: block;
+  max-width: 100%;
 }
 
 .ys-search input {
@@ -72,15 +73,25 @@ yard-sale-day-filter {
   border: 0;
 }
 
-.ys-table table {
-  border-collapse: collapse;
-  font-size: 0.9em;
-  font-family: sans-serif;
-  min-width: 0;
+/* Scroll container: the table keeps its natural column widths and the page
+   never gains a horizontal scrollbar of its own. */
+.ys-table {
   margin-top: 20px;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
+}
+
+.ys-table table {
+  width: 100%;
+  /* Below this the columns wrap into unreadable slivers, so scroll instead. */
+  min-width: 34em;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  font-family: sans-serif;
 }
 
 .ys-table thead tr {
@@ -114,4 +125,24 @@ yard-sale-day-filter {
 .ys-table .ys-sale-day {
   margin: 0 0 0.5em;
   font-weight: 600;
+}
+
+.ys-popup h2 {
+  margin: 0 0 0.25em;
+  font-size: 1em;
+}
+
+.ys-popup h3 {
+  margin: 0 0 0.25em;
+  font-size: 0.9em;
+}
+
+.ys-popup-days {
+  margin: 0 0 0.5em;
+  font-weight: 600;
+}
+
+.ys-popup ul {
+  margin: 0;
+  padding-left: 1.2em;
 }
