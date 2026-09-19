@@ -32,10 +32,22 @@ const pin = L.divIcon({
 // the tip below the card, and the wrapper's own padding.
 const POPUP_CHROME = 90
 
+// Horizontal breathing room: the popup's own shadow plus Leaflet's autopan
+// padding, so a card never touches the edge of the map.
+const POPUP_GUTTER = 40
+
+// Leaflet's own default, kept as the ceiling so wide maps look unchanged.
+const POPUP_MAX_WIDTH = 300
+
 // Never taller than the map, so the content scrolls inside the card instead of
 // running off the top of the map.
 function popupMaxHeight(container: HTMLElement): number {
   return Math.max(120, container.clientHeight - POPUP_CHROME)
+}
+
+// Never wider than the map, so a card on a narrow phone stays fully readable.
+function popupMaxWidth(container: HTMLElement): number {
+  return Math.max(180, Math.min(POPUP_MAX_WIDTH, container.clientWidth - POPUP_GUTTER))
 }
 
 const zoomRadii: Record<number, number> = {
@@ -72,6 +84,7 @@ export default function YardSaleMap() {
 
   function fitPopup(popup: L.Popup) {
     popup.options.maxHeight = popupMaxHeight(el)
+    popup.options.maxWidth = popupMaxWidth(el)
     popup.update()
   }
 
@@ -95,9 +108,14 @@ export default function YardSaleMap() {
     map.on('popupopen', event => {
       openPopup = (event as L.PopupEvent).popup
       fitPopup(openPopup)
+      // Leaflet parks controls in a stacking context above the popup pane and
+      // no z-index on the popup can reach past it, so step the controls aside
+      // for as long as a card is open.
+      el.classList.add('ys-popup-open')
     })
     map.on('popupclose', () => {
       openPopup = undefined
+      el.classList.remove('ys-popup-open')
     })
     map.on('resize', () => {
       if (openPopup) fitPopup(openPopup)

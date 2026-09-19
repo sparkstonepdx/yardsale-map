@@ -156,3 +156,24 @@ yard-sale-day-filter {
 .ys-popup {
   overflow-wrap: anywhere;
 }
+
+/* Leaflet's control corners sit at z-index 1000, outside the map pane that
+   holds popups, so a popup can never be stacked over them. Fade the buttons
+   out instead while a card is open; they come back on close. */
+.ys-map .leaflet-control-zoom,
+.ys-map .leaflet-control-fullscreen {
+  transition: opacity 0.15s linear;
+}
+
+.ys-map.ys-popup-open .leaflet-control-zoom,
+.ys-map.ys-popup-open .leaflet-control-fullscreen {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ys-map .leaflet-control-zoom,
+  .ys-map .leaflet-control-fullscreen {
+    transition: none;
+  }
+}
