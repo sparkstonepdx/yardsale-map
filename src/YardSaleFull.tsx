@@ -21,8 +21,8 @@ export type YardSaleElementName = keyof typeof elements
 export interface YardSaleFullProps {
   config: Json<YardSaleConfigInput> | YardSaleConfigInput
   elements: YardSaleElementName[]
-  style?: string;
-  'data-style'?: string;
+  style?: string
+  'data-style'?: string
 }
 
 export default function YardSaleFull(props: YardSaleFullProps) {

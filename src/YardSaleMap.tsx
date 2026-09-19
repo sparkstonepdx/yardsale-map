@@ -9,12 +9,7 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import 'leaflet-fullscreen/dist/leaflet.fullscreen.css'
 
 import { config, records, raw, isConfigured } from './store'
-import {
-  DEFAULT_POPUP_TEMPLATE,
-  getAddress,
-  popupVars,
-  toStringArray,
-} from './utils/config'
+import { DEFAULT_POPUP_TEMPLATE, getAddress, popupVars, toStringArray } from './utils/config'
 import { renderTemplate } from './utils/template'
 import { type YardSaleRecord } from './utils/sheets'
 import { capitalize } from './utils/string'
@@ -54,10 +49,10 @@ export default function YardSaleMap() {
     !isConfigured()
       ? ''
       : raw.loading
-        ? 'Loading data from Google Sheets...'
-        : raw.error
-          ? 'Error loading data from Google Sheets.'
-          : `Loaded ${records().length} locations.`
+      ? 'Loading data from Google Sheets...'
+      : raw.error
+      ? 'Error loading data from Google Sheets.'
+      : `Loaded ${records().length} locations.`
 
   let el!: HTMLDivElement
   let map: L.Map | undefined
@@ -75,7 +70,7 @@ export default function YardSaleMap() {
     }).addTo(map)
 
     clusterGroup = L.markerClusterGroup({
-      maxClusterRadius: zoom => (zoom > 16 ? 20 : (zoomRadii[zoom] ?? 80)),
+      maxClusterRadius: zoom => (zoom > 16 ? 20 : zoomRadii[zoom] ?? 80),
     })
     map.addLayer(clusterGroup)
   })
