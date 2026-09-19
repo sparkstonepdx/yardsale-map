@@ -146,3 +146,13 @@ yard-sale-day-filter {
   margin: 0;
   padding-left: 1.2em;
 }
+
+/* Leaflet adds this wrapper once a popup hits its maxHeight. */
+.leaflet-popup-scrolled {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ys-popup {
+  overflow-wrap: anywhere;
+}

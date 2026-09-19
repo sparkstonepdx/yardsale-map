@@ -28,6 +28,16 @@ const pin = L.divIcon({
   popupAnchor: [0, -30],
 })
 
+// Vertical space a popup needs outside its content: the pin it sits above,
+// the tip below the card, and the wrapper's own padding.
+const POPUP_CHROME = 90
+
+// Never taller than the map, so the content scrolls inside the card instead of
+// running off the top of the map.
+function popupMaxHeight(container: HTMLElement): number {
+  return Math.max(120, container.clientHeight - POPUP_CHROME)
+}
+
 const zoomRadii: Record<number, number> = {
   12: 50,
   13: 40,
@@ -58,6 +68,12 @@ export default function YardSaleMap() {
   let map: L.Map | undefined
   let clusterGroup: L.MarkerClusterGroup | undefined
   let boundaryLayer: L.FeatureGroup | undefined
+  let openPopup: L.Popup | undefined
+
+  function fitPopup(popup: L.Popup) {
+    popup.options.maxHeight = popupMaxHeight(el)
+    popup.update()
+  }
 
   onMount(() => {
     map = L.map(el, {
@@ -73,6 +89,19 @@ export default function YardSaleMap() {
       maxClusterRadius: zoom => (zoom > 16 ? 20 : zoomRadii[zoom] ?? 80),
     })
     map.addLayer(clusterGroup)
+
+    // Measured at open time, not at bind time, so fullscreen and rotation are
+    // accounted for.
+    map.on('popupopen', event => {
+      openPopup = (event as L.PopupEvent).popup
+      fitPopup(openPopup)
+    })
+    map.on('popupclose', () => {
+      openPopup = undefined
+    })
+    map.on('resize', () => {
+      if (openPopup) fitPopup(openPopup)
+    })
   })
 
   // (Re)draw boundaries when the configured URLs or accent change.
